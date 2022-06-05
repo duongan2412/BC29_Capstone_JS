@@ -1,0 +1,12 @@
+@mixin styleText($fs, $fw, $color) {
+    font-size: $fs;
+    font-weight: $fw;
+    color: $color;
+}
+
+@mixin styleBgImg($url, $bgsize, $bgpos, $bgrp) {
+    background-image: $url;
+    background-size: $bgsize;
+    background-position: $bgpos;
+    background-repeat: $bgrp;
+}

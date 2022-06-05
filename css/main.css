@@ -1,0 +1,143 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+
+.collection {
+  background-color: #4158D0;
+  background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+  height: 100vh;
+}
+
+.collection .collection__content {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.modal-content {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.modal-dialog {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+  border: none;
+}
+
+.card .card-img {
+  background-image: url("./../../img/mobile1_before.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 250px;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card .card-cart {
+  position: absolute;
+  bottom: -80px;
+  width: 100%;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.card .card-body {
+  background-color: #80808026;
+  padding-bottom: 0;
+}
+
+.card .card-body .card-title {
+  font-size: 25px;
+  font-weight: 300;
+  color: #4158D0;
+}
+
+.card .card-body .card-text {
+  font-size: 20px;
+  font-weight: 300;
+  color: #C850C0;
+}
+
+.card .card-body .card-star {
+  color: #FFCC70;
+}
+
+.card:hover .card-img {
+  background-image: url("./../../img/mobile1_after.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 250px;
+}
+
+.card:hover .card-cart {
+  opacity: 1;
+  bottom: 0;
+}
+
+.cart-icon {
+  font-size: 30px;
+  font-weight: 300;
+  color: #00000099;
+  text-align: right;
+  padding-right: 20px;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.cart-icon i {
+  position: relative;
+}
+
+.cart-icon i span {
+  font-size: 10px;
+  font-weight: 800;
+  color: #C850C0;
+  background-color: #fff;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  border-radius: 50%;
+  left: 0;
+  -webkit-transform: translateX(80%);
+          transform: translateX(80%);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.btn-card-cart, .btn-card-detail {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  background-color: #C850C0;
+  border: none;
+  padding: 10px 0;
+}
+
+.btn-card-cart:hover, .btn-card-detail:hover {
+  color: #00000099;
+}
+
+.btn-card-cart:focus, .btn-card-detail:focus {
+  outline: none;
+}
+/*# sourceMappingURL=main.css.map */

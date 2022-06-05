@@ -1,0 +1,21 @@
+.btn-card-cart {
+    @include styleText($fs-3, $fw-2, $clr-white-1);
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    background-color: $clr-pink-1;
+    border: none;
+    padding: $fs-2 0;
+
+    &:hover {
+        color: $clr-black-1;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.btn-card-detail {
+    @extend .btn-card-cart
+}
