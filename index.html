@@ -84,8 +84,30 @@
             </div>
         </div>
         <!-- Cart End -->
+
+        <!-- Select box -->
+        <!-- <div class="form-group">
+            <label for="exampleFormControlSelect1">Example select</label>
+            <select class="form-control" id="exampleFormControlSelect1">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div> -->
+        <div class="form-group ml-5 selectType">
+            <select class="form-control" id="selectType" onchange="phoneSelected(this)">
+                <option>Chọn loại smart phone</option>
+                <option>Iphone</option>
+                <option>Samsung</option>
+            </select>
+        </div>
+        <!-- End Select box -->
+
         <!-- Product -->
         <div class="collection__content container-fluid">
+
             <div id="phone_api_content" class="row justify-content-center">
 
                 <!-- <div class="col-md-2">
@@ -168,7 +190,7 @@
         integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script type="module" src="./src/main.js"></script>
+    <script type="module" src="./src/controllers/main.js"></script>
 </body>
 
 </html>

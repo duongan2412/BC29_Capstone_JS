@@ -18,6 +18,10 @@
   padding-bottom: 100px;
 }
 
+.collection .selectType {
+  width: 20%;
+}
+
 .modal-content {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
