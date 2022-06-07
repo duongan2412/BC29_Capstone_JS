@@ -37,13 +37,6 @@
 }
 
 .card .card-img {
-  background-image: url("./../../img/mobile1_before.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 250px;
-  -webkit-transition: all 1s;
-  transition: all 1s;
   position: relative;
   overflow: hidden;
 }
@@ -52,8 +45,8 @@
   position: absolute;
   bottom: -80px;
   width: 100%;
-  -webkit-transition: all 1s;
-  transition: all 1s;
+  -webkit-transition: all 2s;
+  transition: all 2s;
   opacity: 1;
 }
 
@@ -76,14 +69,6 @@
 
 .card .card-body .card-star {
   color: #FFCC70;
-}
-
-.card:hover .card-img {
-  background-image: url("./../../img/mobile1_after.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 250px;
 }
 
 .card:hover .card-cart {
