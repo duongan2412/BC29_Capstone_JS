@@ -4,6 +4,9 @@
     padding-right: $pd-1;
     padding-top: $pd-2;
     cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    right: 0;
 
     i {
         position: relative;
