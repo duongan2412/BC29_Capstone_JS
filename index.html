@@ -97,69 +97,37 @@
 
         <!-- Product -->
         <div class="collection__content container-fluid">
-
-            <div id="phone_api_content" class="row justify-content-center">
-
-                <!-- <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-img">
-                            <img src="./img/mobile1_before.jpg " class="img-fluid phone-img" alt="">
-                            <div class="card-cart d-flex">
-                                <button type="submit" class="btn-card-detail" data-toggle="modal"
-                                    data-target="#myModal">Reviews</button>
-                                <button type="submit" class="btn-card-cart">Add to Cart</button>
-                            </div>
+            <div id="phone_api_content" class="row justify-content-center"></div>
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="phoneNameModals"></h4>
+                            <button type="button" class="close" data-dismiss="modal">×</button>
                         </div>
-                        <div class="card-body">
-                            <h4 class="card-title mb-0">SPOTS Y915</h4>
-                            <p class="card-text mb-0">$2500</p>
-                            <p class="card-star mb-2">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </p>
-                        </div>
-                        <div class="modal fade" id="myModal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">SPOTS Y915</h4>
-                                        <button type="button" class="close" data-dismiss="modal">×</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Price</th>
-                                                    <th>Screen</th>
-                                                    <th>Back Camera</th>
-                                                    <th>Font Camera</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>$2500</td>
-                                                    <td>screen 68</td>
-                                                    <td>2 camera 12 MP</td>
-                                                    <td>7 MP</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <p class="desc text-left">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet debitis
-                                            molestias, neque veniam quibusdam atque totam aliquam alias modi quae ullam
-                                            eligendi nesciunt, distinctio omnis delectus ad. Cupiditate, repellendus ab?
-                                        </p>
-                                    </div>
-
-                                </div>
-                            </div>
+                        <div class="modal-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Price</th>
+                                        <th>Screen</th>
+                                        <th>Back Camera</th>
+                                        <th>Front Camera</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyModalReview">
+                                    <tr>
+                                        <td id="phonePriceModals"></td>
+                                        <td id="phoneScreenModals"></td>
+                                        <td id="phoneBackModals"></td>
+                                        <td id="phoneFontModals"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="desc text-left" id="phoneDescModals"></p>
                         </div>
                     </div>
-                </div> -->
-
+                </div>
             </div>
         </div>
         <!-- Product End -->
@@ -180,7 +148,12 @@
         integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script type="module" src="./src/controllers/main.js"></script>
+    <script src="./src/services/index.js"></script>
+    <script src="./src/models/lstPhone.js"></script>
+    <script src="./src/models/phone.js"></script>
+    <script src="./src/models/cartiItem.js"></script>
+    <script src="./src/models/cartList.js"></script>
+    <script src="./src/controllers/main.js"></script>
 </body>
 
 </html>

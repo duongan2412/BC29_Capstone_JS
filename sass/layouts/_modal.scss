@@ -1,9 +1,13 @@
 .modal-content {
     justify-content: center;
-    // width: 1000px;
+    width: 120%;
 }
 
 .modal-dialog {
     justify-content: center;
     // margin-left: 200px;
+}
+
+.modal-header {
+    border-bottom: none !important;
 }

@@ -26,12 +26,17 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  width: 120%;
 }
 
 .modal-dialog {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.modal-header {
+  border-bottom: none !important;
 }
 
 .card {
@@ -47,11 +52,11 @@
 
 .card .card-cart {
   position: absolute;
-  bottom: -80px;
   width: 100%;
   -webkit-transition: all .5s;
   transition: all .5s;
-  opacity: 1;
+  bottom: 0;
+  opacity: 0;
 }
 
 .card .card-body {
@@ -75,9 +80,12 @@
   color: #FFCC70;
 }
 
+.card .phoneId {
+  display: none;
+}
+
 .card:hover .card-cart {
   opacity: 1;
-  bottom: 0;
 }
 
 .cart-icon {
@@ -131,5 +139,43 @@
 
 .btn-card-cart:focus, .btn-card-detail:focus {
   outline: none;
+}
+
+.btn-card-detail {
+  border-right: solid 1px #fff;
+}
+
+.qty-content {
+  font-size: 20px;
+  font-weight: 800;
+  color: #00000099;
+  bottom: 0;
+  width: 50%;
+  text-align: center;
+  width: 50%;
+  display: none;
+}
+
+.qty-minus,
+.qty-plus {
+  text-align: center;
+  width: 35px;
+  height: 100%;
+  line-height: 2.0;
+}
+
+.qty-minus:hover,
+.qty-plus:hover {
+  cursor: pointer;
+  background-color: #C850C0;
+  color: #fff;
+}
+
+.qty-plus {
+  float: right;
+}
+
+.qty-minus {
+  float: left;
 }
 /*# sourceMappingURL=main.css.map */

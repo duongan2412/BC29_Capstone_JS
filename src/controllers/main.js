@@ -1,13 +1,11 @@
-import { Serivces } from "./../services/index.js";
-import { Phone } from "./../models/phone.js";
-import { LstPhones } from "./../models/lstPhone.js";
-
 const services = new Serivces();
 const lstPhone = new LstPhones();
+const lstCart = new ListCart();
 const arrPhone = lstPhone.phoneList;
 
 const getEle = (id) => document.getElementById(id);
 
+// funct lấy arr api
 const getArrPhone = (data) => {
     data.forEach((ele) => {
         const id = ele.id;
@@ -39,6 +37,7 @@ const getLstPhonesApi = () => {
 
 getLstPhonesApi();
 
+// render api > html
 const renderLstPhones = (data) => {
     var content = "";
     data.forEach((phone) => {
@@ -46,16 +45,17 @@ const renderLstPhones = (data) => {
         <div class="col-md-2">
                     <div class="card text-center">
                         <div class="card-img">
-                           <img src="./img/${phone.img}" class="img-fluid" alt="">
+                            <img src="./img/${phone.img}" class="img-fluid phoneImg" alt="${phone.img}">
+                            <span class="phoneId">${phone.id}</span>
                             <div class="card-cart d-flex">
-                                <button type="submit" class="btn-card-detail" data-toggle="modal"
-                                    data-target="#myModal${phone.id}">Reviews</button>
-                                <button type="submit" class="btn-card-cart">Add to Cart</button>
+                                <button type="button" class="btn-card-detail" data-toggle="modal"
+                                    data-target="#myModal" onclick="reviewPhone('${phone.id}')">Reviews</button>
+                                <button type="button" class="btn-card-cart" onclick="addToCart(this)" data-action="add-to-cart">Add to Cart</button>
                             </div>
                         </div>
                         <div class="card-body">
-                            <h4 class="card-title mb-0">${phone.name}</h4>
-                            <p class="card-text mb-0">$${phone.price}</p>
+                            <h4 class="card-title mb-0 phoneName">${phone.name}</h4>
+                            <p class="card-text mb-0 phonePrice">$${phone.price}</p>
                             <p class="card-star mb-2">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
@@ -64,42 +64,6 @@ const renderLstPhones = (data) => {
                                 <i class="fas fa-star"></i>
                             </p>
                         </div>
-                        <div class="modal fade" id="myModal${phone.id}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">${phone.name}</h4>
-                                        <button type="button" class="close" data-dismiss="modal">×</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Price</th>
-                                                    <th>Screen</th>
-                                                    <th>Back Camera</th>
-                                                    <th>Font Camera</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>$${phone.price}</td>
-                                                    <td>${phone.screen}</td>
-                                                    <td>${phone.backCamera}</td>
-                                                    <td>${phone.frontCamera}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <p class="desc text-left">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet debitis
-                                            molestias, neque veniam quibusdam atque totam aliquam alias modi quae ullam
-                                            eligendi nesciunt, distinctio omnis delectus ad. Cupiditate, repellendus ab?
-                                        </p>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
         `;
@@ -107,7 +71,8 @@ const renderLstPhones = (data) => {
     getEle("phone_api_content").innerHTML = content;
 }
 
-window.typePhone = () => {
+// select box chọn phone type
+typePhone = () => {
     const typeSelect = getEle("typeSelect").value;
     const fillerPhone = arrPhone.filter((phone) => {
         if (phone.type !== typeSelect) {
@@ -122,4 +87,68 @@ window.typePhone = () => {
     }
 }
 
-// window.typeSelected();
+// dom element qua model btn reviews
+const getPhoneInfo = (id) => {
+    services
+        .getPhoneByIdApi(id)
+        .then((result) => {
+            getEle("phoneNameModals").innerHTML = result.data.name;
+            getEle("phonePriceModals").innerHTML = result.data.price;
+            getEle("phoneScreenModals").innerHTML = result.data.screen;
+            getEle("phoneBackModals").innerHTML = result.data.backCamera;
+            getEle("phoneFontModals").innerHTML = result.data.frontCamera;
+            getEle("phoneDescModals").innerHTML = result.data.desc;
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+}
+
+reviewPhone = (id) => {
+    getPhoneInfo(id);
+}
+
+// add cart 
+addToCart = (ele) => {
+    const arrBtnAdd = document.querySelectorAll(".btn-card-cart");
+    for (let i = 0; i < arrBtnAdd.length; i++) {
+        ele.disabled = true;
+        ele.innerHTML = "In cart";
+        ele.style.color = "red";
+    };
+    // console.log(arrBtnAdd);
+    // arrBtnAdd.forEach(arrBtnAdd => {
+    //     arrBtnAdd.addEventListener("click", () => {
+    //         const productDom = arrBtnAdd.parentNode.parentNode;
+    //         console.log(productDom);
+    //         // const itemID = productDom.querySelector(".phoneID").value;
+    //         // console.log(itemID);
+    //     })
+    // })
+    arrBtnAdd.forEach(arrBtnAdd => {
+        const productDom = arrBtnAdd.parentNode.parentNode.parentNode;
+        console.log(productDom);
+        const cartItemID = productDom.querySelector(".phoneId").innerHTML;
+        const cartItemImg = productDom.querySelector(".phoneImg").getAttribute("alt");
+        const cartItemName = productDom.querySelector(".phoneName").innerHTML;
+        const cartItemPrice = productDom.querySelector(".phonePrice").innerHTML;
+        console.log(cartItemID, cartItemImg, cartItemName, cartItemPrice);
+    })
+}
+
+// lấy sản phẩm từ api qua id
+// function getPhoneInfo(id) {
+//     service
+//     .getProductById(id);
+//     .then(function (result) {
+//             getEle("TenSP").value = result.data.tenSP;
+//             getEle("GiaSP").value = result.data.gia;
+//             getEle("HinhSP").value = result.data.hinhAnh;
+//             getEle("moTa").value = result.data.moTa;
+//         })
+//     .catch(function (error) {
+//             console.log(error);
+//         });
+// }
+
+

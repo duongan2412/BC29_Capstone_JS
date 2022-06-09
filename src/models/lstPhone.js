@@ -1,4 +1,4 @@
-export class LstPhones {
+class LstPhones {
     phoneList = [];
 
     addPhone(phone) {

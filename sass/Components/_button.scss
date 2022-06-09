@@ -17,5 +17,37 @@
 }
 
 .btn-card-detail {
-    @extend .btn-card-cart
+    @extend .btn-card-cart;
+    border-right: solid 1px $clr-white-1;
+}
+
+.qty-content {
+    @include styleText($fs-5, $fw-2, $clr-black-1);
+    bottom: 0;
+    width: 50%;
+    text-align: center;
+    width: 50%;
+    display: none;
+}
+
+.qty-minus,
+.qty-plus {
+    text-align: center;
+    width: 35px;
+    height: 100%;
+    line-height: 2.0;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $clr-pink-1;
+        color: $clr-white-1;
+    }
+}
+
+.qty-plus {
+    float: right;
+}
+
+.qty-minus {
+    float: left;
 }

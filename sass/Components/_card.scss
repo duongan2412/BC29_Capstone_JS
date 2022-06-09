@@ -13,10 +13,10 @@
 
     .card-cart {
         position: absolute;
-        bottom: -80px;
         width: 100%;
         transition: all .5s;
-        opacity: 1;
+        bottom: 0;
+        opacity: 0;
     }
 
     .card-body {
@@ -35,6 +35,10 @@
             color: $clr-yellow-1;
         }
     }
+
+    .phoneId {
+        display: none;
+    }
 }
 
 .card {
@@ -48,7 +52,6 @@
 
         .card-cart {
             opacity: 1;
-            bottom: 0;
         }
     }
 }
