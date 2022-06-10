@@ -134,21 +134,23 @@ addToCart = (event) => {
                 ...cartItemLst,
                 [cartItem.name]: cartItem
             }
+        } else {
+            cartItemLst[cartItem.name].qty += 1;
         }
     } else {
         cartItemLst = {
             [cartItem.name]: cartItem
         }
     }
-    cartItemDom.querySelector(".qty").innerHTML = cartItemQty;
+    cartItemDom.querySelector(".qty").innerHTML = cartItemLst[cartItem.name].qty;
     localStorage.setItem("ListCart", JSON.stringify(cartItemLst));
-
     inCart = Object.values(cartItemLst)
+    console.log(inCart);
     let total = 0;
     for (let i = 0; i < inCart.length; i++) {
         total += inCart[i].qty;
     }
-    // console.log(total);
+    console.log(total);
     if (total > 0) {
         getEle("cartTotalQty").classList.remove("inactive");
         getEle("cartTotalQty").innerHTML = total
