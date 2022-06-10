@@ -121,7 +121,7 @@
   text-align: center;
 }
 
-.btn-card-cart, .btn-card-detail {
+.btn-card-detail, .btn-card-cart {
   font-size: 12px;
   font-weight: 800;
   color: #fff;
@@ -133,49 +133,52 @@
   padding: 10px 0;
 }
 
-.btn-card-cart:hover, .btn-card-detail:hover {
+.btn-card-detail:hover, .btn-card-cart:hover {
   color: #00000099;
 }
 
-.btn-card-cart:focus, .btn-card-detail:focus {
+.btn-card-detail:focus, .btn-card-cart:focus {
   outline: none;
 }
 
-.btn-card-detail {
+.btn-card-cart {
   border-right: solid 1px #fff;
 }
 
-.qty-content {
+.qty_content {
   font-size: 20px;
   font-weight: 800;
   color: #00000099;
-  bottom: 0;
-  width: 50%;
-  text-align: center;
-  width: 50%;
-  display: none;
+  -webkit-box-flex: 50%;
+      -ms-flex: 50%;
+          flex: 50%;
+  line-height: 2.0;
 }
 
-.qty-minus,
-.qty-plus {
+.qty_plus {
+  float: right;
+}
+
+.qty_minus {
+  float: left;
+}
+
+.qty_minus,
+.qty_plus {
   text-align: center;
   width: 35px;
   height: 100%;
   line-height: 2.0;
 }
 
-.qty-minus:hover,
-.qty-plus:hover {
+.qty_minus:hover,
+.qty_plus:hover {
   cursor: pointer;
   background-color: #C850C0;
   color: #fff;
 }
 
-.qty-plus {
-  float: right;
-}
-
-.qty-minus {
-  float: left;
+.inactive {
+  display: none;
 }
 /*# sourceMappingURL=main.css.map */

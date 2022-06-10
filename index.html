@@ -26,8 +26,8 @@
     <section class="collection">
         <!-- Cart -->
         <span class="cart-icon " data-toggle="modal" data-target="#cartModal">
-            <i class="fas fa-shopping-cart">
-                <span>10</span>
+            <i class="fas fa-shopping-cart cartIconTotal">
+                <span id="cartTotalQty" class="inactive"></span>
             </i>
         </span>
         <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -97,7 +97,9 @@
 
         <!-- Product -->
         <div class="collection__content container-fluid">
-            <div id="phone_api_content" class="row justify-content-center"></div>
+            <div id="phone_api_content" class="row justify-content-center">
+
+            </div>
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
                     <div class="modal-content">

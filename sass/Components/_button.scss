@@ -1,4 +1,4 @@
-.btn-card-cart {
+.btn-card-detail {
     @include styleText($fs-3, $fw-2, $clr-white-1);
     bottom: 0;
     right: 0;
@@ -6,6 +6,7 @@
     background-color: $clr-pink-1;
     border: none;
     padding: $fs-2 0;
+
 
     &:hover {
         color: $clr-black-1;
@@ -16,22 +17,28 @@
     }
 }
 
-.btn-card-detail {
-    @extend .btn-card-cart;
+.btn-card-cart {
+    @extend .btn-card-detail;
     border-right: solid 1px $clr-white-1;
+    // display: none;
 }
 
-.qty-content {
+.qty_content {
     @include styleText($fs-5, $fw-2, $clr-black-1);
-    bottom: 0;
-    width: 50%;
-    text-align: center;
-    width: 50%;
-    display: none;
+    flex: 50%;
+    line-height: 2.0;
 }
 
-.qty-minus,
-.qty-plus {
+.qty_plus {
+    float: right;
+}
+
+.qty_minus {
+    float: left;
+}
+
+.qty_minus,
+.qty_plus {
     text-align: center;
     width: 35px;
     height: 100%;
@@ -44,10 +51,6 @@
     }
 }
 
-.qty-plus {
-    float: right;
-}
-
-.qty-minus {
-    float: left;
+.inactive {
+    display: none;
 }

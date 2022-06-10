@@ -5,7 +5,7 @@ const arrPhone = lstPhone.phoneList;
 
 const getEle = (id) => document.getElementById(id);
 
-// funct lấy arr api
+// funct lấy thông tin từ api
 const getArrPhone = (data) => {
     data.forEach((ele) => {
         const id = ele.id;
@@ -37,12 +37,12 @@ const getLstPhonesApi = () => {
 
 getLstPhonesApi();
 
-// render api > html
+// render thông tin api qua html
 const renderLstPhones = (data) => {
     var content = "";
     data.forEach((phone) => {
         content += `
-        <div class="col-md-2">
+        <div class="col-md-2 cart_item">
                     <div class="card text-center">
                         <div class="card-img">
                             <img src="./img/${phone.img}" class="img-fluid phoneImg" alt="${phone.img}">
@@ -50,7 +50,13 @@ const renderLstPhones = (data) => {
                             <div class="card-cart d-flex">
                                 <button type="button" class="btn-card-detail" data-toggle="modal"
                                     data-target="#myModal" onclick="reviewPhone('${phone.id}')">Reviews</button>
-                                <button type="button" class="btn-card-cart" onclick="addToCart(this)" data-action="add-to-cart">Add to Cart</button>
+                                <button type="button" class="btn-card-cart" onclick="addToCart(event)" data-action="${phone.id}">Add to Cart</button>
+                                <div class="qty_content inactive">
+                                    <span class="qty_minus" onclick="decreaseItem(event)">-</span>
+                                    <span class="qty"></span>
+                                    <span class="qty_plus" onclick="increaseItem(event)">+</span>
+                                </div>
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -71,7 +77,7 @@ const renderLstPhones = (data) => {
     getEle("phone_api_content").innerHTML = content;
 }
 
-// select box chọn phone type
+// hiện thị khi chọn loại phone
 typePhone = () => {
     const typeSelect = getEle("typeSelect").value;
     const fillerPhone = arrPhone.filter((phone) => {
@@ -87,8 +93,8 @@ typePhone = () => {
     }
 }
 
-// dom element qua model btn reviews
-const getPhoneInfo = (id) => {
+// lấy thông tin để show lên modal reivews
+const getPhoneReviews = (id) => {
     services
         .getPhoneByIdApi(id)
         .then((result) => {
@@ -105,50 +111,134 @@ const getPhoneInfo = (id) => {
 }
 
 reviewPhone = (id) => {
-    getPhoneInfo(id);
+    getPhoneReviews(id);
 }
 
-// add cart 
-addToCart = (ele) => {
-    const arrBtnAdd = document.querySelectorAll(".btn-card-cart");
-    for (let i = 0; i < arrBtnAdd.length; i++) {
-        ele.disabled = true;
-        ele.innerHTML = "In cart";
-        ele.style.color = "red";
-    };
-    // console.log(arrBtnAdd);
-    // arrBtnAdd.forEach(arrBtnAdd => {
-    //     arrBtnAdd.addEventListener("click", () => {
-    //         const productDom = arrBtnAdd.parentNode.parentNode;
-    //         console.log(productDom);
-    //         // const itemID = productDom.querySelector(".phoneID").value;
-    //         // console.log(itemID);
-    //     })
-    // })
-    arrBtnAdd.forEach(arrBtnAdd => {
-        const productDom = arrBtnAdd.parentNode.parentNode.parentNode;
-        console.log(productDom);
-        const cartItemID = productDom.querySelector(".phoneId").innerHTML;
-        const cartItemImg = productDom.querySelector(".phoneImg").getAttribute("alt");
-        const cartItemName = productDom.querySelector(".phoneName").innerHTML;
-        const cartItemPrice = productDom.querySelector(".phonePrice").innerHTML;
-        console.log(cartItemID, cartItemImg, cartItemName, cartItemPrice);
-    })
+// add item vào list cart
+addToCart = (event) => {
+    const ele = event.target.parentElement;
+    ele.querySelector(".btn-card-cart").classList.add("inactive");
+    ele.querySelector(".qty_content").classList.remove("inactive");
+    const cartItemDom = event.target.parentElement.parentElement.parentElement;
+    const cartItemId = event.target.getAttribute("data-action");
+    const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
+    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+    const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
+    let cartItemQty = 1;
+    const cartItem = new CartItem(cartItemId, cartItemName, cartItemPrice, cartItemImg, cartItemQty);
+    let cartItemLst = localStorage.getItem("ListCart");
+    cartItemLst = JSON.parse(cartItemLst);
+    if (cartItemLst != null) {
+        if (cartItemLst[cartItem.name] == undefined) {
+            cartItemLst = {
+                ...cartItemLst,
+                [cartItem.name]: cartItem
+            }
+        }
+    } else {
+        cartItemLst = {
+            [cartItem.name]: cartItem
+        }
+    }
+    cartItemDom.querySelector(".qty").innerHTML = cartItemQty;
+    localStorage.setItem("ListCart", JSON.stringify(cartItemLst));
+
+    inCart = Object.values(cartItemLst)
+    let total = 0;
+    for (let i = 0; i < inCart.length; i++) {
+        total += inCart[i].qty;
+    }
+    // console.log(total);
+    if (total > 0) {
+        getEle("cartTotalQty").classList.remove("inactive");
+        getEle("cartTotalQty").innerHTML = total
+    } else {
+        getEle("cartTotalQty").classList.add("inactive");
+    }
 }
 
-// lấy sản phẩm từ api qua id
-// function getPhoneInfo(id) {
-//     service
-//     .getProductById(id);
-//     .then(function (result) {
-//             getEle("TenSP").value = result.data.tenSP;
-//             getEle("GiaSP").value = result.data.gia;
-//             getEle("HinhSP").value = result.data.hinhAnh;
-//             getEle("moTa").value = result.data.moTa;
-//         })
-//     .catch(function (error) {
-//             console.log(error);
-//         });
+// tăng số lượng
+increaseItem = (event) => {
+    const cartItemDom = event.target.parentElement.parentElement.parentElement.parentElement;
+    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+    const btnAdd = cartItemDom.querySelector(".btn-card-cart");
+    const divQty = cartItemDom.querySelector(".qty_content");
+    let cartItemLst = localStorage.getItem("ListCart");
+    cartItemLst = JSON.parse(cartItemLst);
+    if (cartItemLst[cartItemName] != undefined) {
+        cartItemLst[cartItemName].qty += 1;
+        cartItemDom.querySelector(".qty").innerHTML = cartItemLst[cartItemName].qty;
+        if (cartItemLst[cartItemName].qty > 0) {
+            divQty.classList.remove("inactive");
+            btnAdd.classList.add("inactive");
+        }
+    }
+    localStorage.setItem("ListCart", JSON.stringify(cartItemLst));
+
+    inCart = Object.values(cartItemLst)
+    let total = 0;
+    for (let i = 0; i < inCart.length; i++) {
+        total += inCart[i].qty;
+    }
+    // console.log(total);
+    if (total > 0) {
+        getEle("cartTotalQty").classList.remove("inactive");
+        getEle("cartTotalQty").innerHTML = total
+    } else {
+        getEle("cartTotalQty").classList.add("inactive");
+    }
+}
+
+// giảm số lượng
+decreaseItem = (event) => {
+    const cartItemDom = event.target.parentElement.parentElement.parentElement.parentElement;
+    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+    const btnAdd = cartItemDom.querySelector(".btn-card-cart");
+    const divQty = cartItemDom.querySelector(".qty_content");
+    let cartItemLst = localStorage.getItem("ListCart");
+    cartItemLst = JSON.parse(cartItemLst);
+    if (cartItemLst[cartItemName] != undefined) {
+        cartItemLst[cartItemName].qty -= 1;
+        cartItemDom.querySelector(".qty").innerHTML = cartItemLst[cartItemName].qty;
+        if (cartItemLst[cartItemName].qty == 0) {
+            btnAdd.classList.remove("inactive");
+            divQty.classList.add("inactive");
+        }
+    }
+
+    localStorage.setItem("ListCart", JSON.stringify(cartItemLst));
+
+    inCart = Object.values(cartItemLst)
+    let total = 0;
+    for (let i = 0; i < inCart.length; i++) {
+        total += inCart[i].qty;
+    }
+    // console.log(total);
+    if (total > 0) {
+        getEle("cartTotalQty").classList.remove("inactive");
+        getEle("cartTotalQty").innerHTML = total
+    } else {
+        getEle("cartTotalQty").classList.add("inactive");
+    }
+
+}
+
+// // hiện thị số lượng ở giỏ hàng
+// const showCartNum = () => {
+//     let total = 0
+//     let cartItemLst = localStorage.getItem("ListCart");
+//     cartItemLst = JSON.parse(cartItemLst);
+//     cartItemLst = Object.values(cartItemLst)
+//     // console.log(cartItemLst);
+//     for (let i = 0; i < cartItemLst.length; i++) {
+//         total += cartItemLst[i].qty;
+//     }
+//     if (total > 0) {
+//         getEle("cartTotalQty").classList.remove("inactive");
+//         getEle("cartTotalQty").textContent = total
+//     } else {
+//         getEle("cartTotalQty").classList.add("inactive");
+//     }
 // }
 
-
+// showCartNum();
