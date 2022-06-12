@@ -42,7 +42,7 @@ const renderProducListByApi = (data) => {
         <div class="col-md-2 cart_item">
                     <div class="card text-center">
                         <div class="card-img">
-                            <img src="./img/${product.img}" class="img-fluid phoneImg" alt="${product.img}">
+                            <img src="./../../assets/img/${product.img}" class="img-fluid phoneImg" alt="${product.img}">
                             <span class="phoneId">${product.id}</span>
                             <div class="card-cart d-flex">
                                 <button type="button" class="btn-card-detail" data-toggle="modal"
@@ -173,22 +173,22 @@ const renderCartList = () => {
     cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
     let contentHTML = "";
     let paysum = 0;
-    cartList.arrCartList.forEach((ele) => {
-        const price = parseInt(ele.price);
-        const qty = parseInt(ele.qty);
+    cartList.arrCartList.forEach((product) => {
+        const price = parseInt(product.price);
+        const qty = parseInt(product.qty);
         const pricesum = price * qty;
         paysum += pricesum;
         contentHTML += `
                 <tr>
                     <td class="w-25">
-                        <img src="./img/${ele.img}" class="img-fluid img-thumbnail phoneImg" alt="${ele.img}">
+                        <img src="./../../assets/img/${product.img}" class="img-fluid img-thumbnail phoneImg" alt="${product.img}">
                     </td>
-                    <td class="phoneName">${ele.name}</td>
-                    <td>$<span class="phonePrice">${ele.price}</span></td>
-                    <td class="qty"><input class="phoneQty" type="number" class="form-control" min=0 value="${qty}" onchange="checkQty(event)" data-action="${ele.id}"></td>
+                    <td class="phoneName">${product.name}</td>
+                    <td>$<span class="phonePrice">${product.price}</span></td>
+                    <td class="qty"><input class="phoneQty" type="number" class="form-control" min=0 value="${qty}" onchange="checkQty(event)" data-action="${product.id}"></td>
                     <td>$${pricesum}</td>
                     <td>
-                        <a href="#" class="btn btn-danger btn-sm" onclick="removeItem('${ele.id}')">
+                        <a href="#" class="btn btn-danger btn-sm" onclick="removeItem('${product.id}')">
                             <i class="fa fa-times"></i>
                         </a>
                     </td>
