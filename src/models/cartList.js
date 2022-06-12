@@ -22,11 +22,9 @@ class CartList {
         }
     };
 
-    updateItem(name, qty) {
-        this.arrCartList.forEach(ele => {
-            if (ele.name === name) {
-                ele.qty = qty;
-            }
-        });
+    updateItem(item) {
+        this.arrCartList = this.arrCartList.map(ele => {
+            return ele.id === item.id ? item : ele
+        })
     }
 }

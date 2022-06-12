@@ -2,7 +2,6 @@ const services = new Serivces();
 const productList = new ProductList();
 const cartList = new CartList();
 const getEle = (id) => document.getElementById(id);
-let arrCartList = cartList.arrCartList;
 
 // lấy thông tin api về
 const getProductLstApi = () => {
@@ -10,14 +9,11 @@ const getProductLstApi = () => {
         .getProductList()
         .then((result) => {
             tempProductList(result.data);
-            renderProdocList(result.data)
         })
         .catch((error) => {
             console.log(error);
         })
 }
-
-getProductLstApi();
 
 const tempProductList = (data) => {
     data.forEach((ele) => {
@@ -32,11 +28,14 @@ const tempProductList = (data) => {
         const type = ele.type;
         const phone = new Product(id, name, price, screen, backCamera, frontCamera, img, desc, type);
         productList.addProduct(phone);
+        renderProducListByApi(productList.arrProductList)
     })
 }
 
+getProductLstApi();
+
 // render thông tin api qua html
-const renderProdocList = (data) => {
+const renderProducListByApi = (data) => {
     let content = "";
     data.forEach((product) => {
         content += `
@@ -48,13 +47,7 @@ const renderProdocList = (data) => {
                             <div class="card-cart d-flex">
                                 <button type="button" class="btn-card-detail" data-toggle="modal"
                                     data-target="#myModal" onclick="reviewProduct(${product.id})">Reviews</button>
-                                <button type="button" class="btn-card-cart" onclick="addToCart(event)" data-action="${product.id}">Add to Cart</button>
-                                <div class="qty_content inactive">
-                                    <span class="qty_minus" onclick="decreaseItem(event)">-</span>
-                                    <span class="qty"></span>
-                                    <span class="qty_plus" onclick="increaseItem(event)">+</span>
-                                </div>
-
+                                <button type="button" class="btn-card-cart" onclick="addToCart(event)" data-action="${product.id}">Add to Cart</button> 
                             </div>
                         </div>
                         <div class="card-body">
@@ -85,9 +78,9 @@ typePhone = () => {
         return true;
     })
     if (filerPhone.length == 0) {
-        renderProdocList(productList.arrProductList);
+        renderProducListByApi(productList.arrProductList);
     } else {
-        renderProdocList(filerPhone);
+        renderProducListByApi(filerPhone);
     }
 }
 
@@ -112,19 +105,57 @@ reviewProduct = (id) => {
     getProductApiById(id);
 }
 
-// xử lý add product vào cart
-const getLocalStorage = () => {
-    let cartItemList = localStorage.getItem("CART_LIST");
-    cartItemList = JSON.parse(cartItemList);
-    return cartItemList;
+const setItemLocalStorage = () => {
+    const stringify = JSON.stringify(cartList.arrCartList);
+    localStorage.setItem("CART_LIST", stringify);
 }
 
-const setItemLocalStorage = (cartItemList) => {
-    localStorage.setItem("CART_LIST", JSON.stringify(cartItemList));
-    inCart = Object.values(cartItemList)
+const getItemLocalStorage = () => {
+    const stringify = localStorage.getItem("CART_LIST");
+    cartList.arrCartList = stringify ? JSON.parse(stringify) : [];
+}
+
+getItemLocalStorage();
+
+// add item vao cart list
+addToCart = (event) => {
+    const ele = event.target.parentElement;
+    // ele.querySelector(".btn-card-cart").classList.add("inactive");
+    // ele.querySelector(".qty_content").classList.remove("inactive");
+    const cartItemDom = event.target.closest(".cart_item");
+    const cartItemId = event.target.getAttribute("data-action");
+    const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
+    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+    const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
+    let cartItemQty = 1;
+    const cartItem = new CartItem(cartItemId, cartItemName, cartItemPrice, cartItemImg, cartItemQty);
+    cartList.addCart(cartItem);
+    renderCartNum();
+    setItemLocalStorage();
+}
+
+// xử lý trùng id trong storage
+const mergeDuplicate = (arr) => {
+    let newArr = []
+    arr.forEach(ele => {
+        let el = newArr.find(newEle => newEle.name == ele.name);
+        if (el) {
+            el.qty += ele.qty
+        }
+        else {
+            newArr.push(ele)
+        }
+    });
+    return newArr;
+}
+
+// render số lượng đc chọn 
+const renderCartNum = () => {
+    setItemLocalStorage();
+    cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
     let total = 0;
-    for (let i = 0; i < inCart.length; i++) {
-        total += inCart[i].qty;
+    for (let i = 0; i < cartList.arrCartList.length; i++) {
+        total += cartList.arrCartList[i].qty;
     }
     if (total > 0) {
         getEle("cartTotalQty").classList.remove("inactive");
@@ -134,103 +165,35 @@ const setItemLocalStorage = (cartItemList) => {
     }
 }
 
-addToCart = (event) => {
-    const ele = event.target.parentElement;
-    ele.querySelector(".btn-card-cart").classList.add("inactive");
-    ele.querySelector(".qty_content").classList.remove("inactive");
-    const cartItemDom = event.target.parentElement.parentElement.parentElement.parentElement;
-    const cartItemId = event.target.getAttribute("data-action");
-    const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
-    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
-    const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
-    let cartItemQty = 1;
-    const cartItem = new CartItem(cartItemId, cartItemName, cartItemPrice, cartItemImg, cartItemQty);
-    let cartItemList = getLocalStorage();
-    if (cartItemList != null) {
-        if (cartItemList[cartItem.name] == undefined) {
-            cartItemList = {
-                ...cartItemList,
-                [cartItem.name]: cartItem
-            }
-        } else {
-            cartItemList[cartItem.name].qty += 1;
-        }
-    } else {
-        cartItemList = {
-            [cartItem.name]: cartItem
-        }
-    }
-    cartItemDom.querySelector(".qty").innerHTML = cartItemList[cartItem.name].qty;
-    // console.log(typeof cartItemList);
-    setItemLocalStorage(cartItemList);
-    renderCartList();
-}
+renderCartNum();
 
-// tăng số lượng
-increaseItem = (event) => {
-    const cartItemDom = event.target.parentElement.parentElement.parentElement.parentElement;
-    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
-    const btnAdd = cartItemDom.querySelector(".btn-card-cart");
-    const divQty = cartItemDom.querySelector(".qty_content");
-    let cartItemList = getLocalStorage();
-    if (cartItemList[cartItemName] != undefined) {
-        cartItemList[cartItemName].qty += 1;
-        cartItemDom.querySelector(".qty").innerHTML = cartItemList[cartItemName].qty;
-        if (cartItemList[cartItemName].qty > 0) {
-            divQty.classList.remove("inactive");
-            btnAdd.classList.add("inactive");
-        }
-    }
-    setItemLocalStorage(cartItemList);
-}
-
-// giảm số lượng
-decreaseItem = (event) => {
-    const cartItemDom = event.target.parentElement.parentElement.parentElement.parentElement;
-    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
-    const btnAdd = cartItemDom.querySelector(".btn-card-cart");
-    const divQty = cartItemDom.querySelector(".qty_content");
-    let cartItemList = getLocalStorage();
-    if (cartItemList[cartItemName] != undefined) {
-        cartItemList[cartItemName].qty -= 1;
-        cartItemDom.querySelector(".qty").innerHTML = cartItemList[cartItemName].qty;
-        if (cartItemList[cartItemName].qty == 0) {
-            btnAdd.classList.remove("inactive");
-            divQty.classList.add("inactive");
-        }
-    }
-    setItemLocalStorage(cartItemList);
-}
-
-// render item in cart
+// render lên cart list
 const renderCartList = () => {
-    const arrInCart = convertObjToArr("CART_LIST");
-    if (arrInCart == undefined) {
-        return;
-    }
+    setItemLocalStorage();
+    cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
     let contentHTML = "";
     let paysum = 0;
-    arrInCart.forEach((ele) => {
+    cartList.arrCartList.forEach((ele) => {
         const price = parseInt(ele.price);
         const qty = parseInt(ele.qty);
         const pricesum = price * qty;
         paysum += pricesum;
         contentHTML += `
-    <tr>
-        <td class="w-25">
-            <img src="./img/${ele.img}" class="img-fluid img-thumbnail">
-        </td>
-        <td class="phoneName">${ele.name}</td>
-        <td>$${price}</td>
-        <td class="qty"><input class="phoneQty" type="number" class="form-control" min=0 value="${qty}" onchange="checkQty(event)"></td>
-        <td>$${pricesum}</td>
-        <td>
-            <a href="#" class="btn btn-danger btn-sm" onclick="removeItem('${ele.id}')">
-                <i class="fa fa-times"></i>
-            </a>
-        </td>
-    </tr>
-    `
+                <tr>
+                    <td class="w-25">
+                        <img src="./img/${ele.img}" class="img-fluid img-thumbnail phoneImg" alt="${ele.img}">
+                    </td>
+                    <td class="phoneName">${ele.name}</td>
+                    <td>$<span class="phonePrice">${ele.price}</span></td>
+                    <td class="qty"><input class="phoneQty" type="number" class="form-control" min=0 value="${qty}" onchange="checkQty(event)" data-action="${ele.id}"></td>
+                    <td>$${pricesum}</td>
+                    <td>
+                        <a href="#" class="btn btn-danger btn-sm" onclick="removeItem('${ele.id}')">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </td>
+                </tr>
+            `
     });
     paysum = '$' + paysum;
     getEle("paysum").innerHTML = paysum;
@@ -241,68 +204,41 @@ getEle("showCart").addEventListener("click", () => {
     renderCartList();
 })
 
-// Chuyển obj storage sang arr
-const convertObjToArr = (obj) => {
-    let arrInCart = [];
-    let cartItemList = localStorage.getItem(obj);
-    if (cartItemList == undefined) {
-        return;
-    }
-    cartItemList = JSON.parse(cartItemList);
-    inCart = Object.values(cartItemList)
-    inCart.forEach(currentItem => {
-        if (currentItem.qty > 0) {
-            arrInCart.push(currentItem)
-        }
-    });
-    return arrInCart;
+// lấy giá trị tạo obj cartItem
+const getFormValue = (event) => {
+    const cartItemDom = event.target.closest("tr");
+    const cartItemId = event.target.getAttribute("data-action");
+    const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
+    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+    const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
+    const cartItemQty = cartItemDom.querySelector(".phoneQty").value * 1;
+    return item = new CartItem(cartItemId, cartItemName, cartItemPrice, cartItemImg, cartItemQty);
 }
 
-// chuyển arr CartList sang obj storage
-const convertArrToObj = (arr) => {
-    return arr.length == 0 ? null : result = Object.assign.apply(null, arr.map(ele => ({ [ele.name]: ele })));
-}
-
-const syncObjtpArr = () => {
-    const arrInCart = convertObjToArr("CART_LIST");
-    cartList.arrCartList = arrInCart
-}
-
-syncObjtpArr();
-
+// Xoá item trong cart list 
 removeItem = (id) => {
-    const arrInCart = convertObjToArr("CART_LIST");
-    cartList.arrCartList = arrInCart;
     cartList.deleteItem(id);
-    const result = convertArrToObj(cartList.arrCartList);
-    if (result == null) {
-        localStorage.removeItem("CART_LIST");
+    if (cartList.arrCartList.length == 0) {
         getEle("closeCartList").click();
-    } else {
-        setItemLocalStorage(result);
-        renderCartList();
+        getEle("cartTotalQty").classList.add("inactive");
     }
-}
-
-checkQty = (event) => {
-    const tr = event.target.parentElement.parentElement;
-    const cartItemName = tr.querySelector(".phoneName").innerHTML;
-    const cartItemQty = tr.querySelector(".phoneQty").value * 1;
-    const arrInCart = convertObjToArr("CART_LIST");
-    cartList.arrCartList = arrInCart;
-    cartList.updateItem(cartItemName, cartItemQty);
-    console.log(cartList.arrCartList);
-    const result = convertArrToObj(cartList.arrCartList);
-    setItemLocalStorage(result);
     renderCartList();
+    renderCartNum();
 }
 
+// xử lý thay đổi số lượng trong cart list
+checkQty = (event) => {
+    const cartItem = getFormValue(event);
+    cartList.updateItem(cartItem);
+    renderCartList();
+    renderCartNum();
+}
+
+// check out cart list 
 checkOut = () => {
     getEle("closeCartList").click();
     let contentHTML = '';
     let paysum = 0;
-    const arrInCart = convertObjToArr("CART_LIST");
-    cartList.arrCartList = arrInCart;
     cartList.arrCartList.forEach(ele => {
         const price = parseInt(ele.price);
         const qty = parseInt(ele.qty);
@@ -321,6 +257,7 @@ checkOut = () => {
     getEle("contentPurchase").innerHTML = contentHTML;
 }
 
+// purchase cart list 
 purChase = () => {
     getEle("closeCheckOut").click();
     let orderNum = Math.floor(Math.random() * 1001);
@@ -329,9 +266,9 @@ purChase = () => {
 }
 
 confirmOrder = () => {
-    localStorage.removeItem("CART_LIST");
     cartList.arrCartList = [];
-    // console.log(cartList.arrCartList);
+    localStorage.removeItem("CART_LIST");
     getEle("closeContinueShopping").click();
+    getEle("cartTotalQty").classList.add("inactive");
 }
 
