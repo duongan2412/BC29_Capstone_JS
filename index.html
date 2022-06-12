@@ -25,7 +25,7 @@
 <body>
     <section class="collection">
         <!-- Cart -->
-        <span class="cart-icon " data-toggle="modal" data-target="#cartModal">
+        <span id="showCart" class="cart-icon" data-toggle="modal" data-target="#cartModal">
             <i class="fas fa-shopping-cart cartIconTotal">
                 <span id="cartTotalQty" class="inactive"></span>
             </i>
@@ -38,7 +38,7 @@
                         <h5 class="modal-title" id="exampleModalLabel">
                             Your Shopping Cart
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button id="closeCartList" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -54,10 +54,10 @@
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody id="tbodyInCart">
+                                <!-- <tr>
                                     <td class="w-25">
-                                        <img src="./img/mobile1_before.jpg" class="img-fluid img-thumbnail" alt="Sheep">
+                                        <img src="./img/mobile1_before.jpg" class="img-fluid img-thumbnail">
                                     </td>
                                     <td>Vans Sk8-Hi MTE Shoes</td>
                                     <td>89$</td>
@@ -69,16 +69,18 @@
                                             <i class="fa fa-times"></i>
                                         </a>
                                     </td>
-                                </tr>
+                                </tr> -->
+
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end">
-                            <h5>Total: <span class="price text-success">89$</span></h5>
+                            <h5>Total: <span id="paysum" class="price text-success"></span></h5>
                         </div>
                     </div>
                     <div class="modal-footer border-top-0 d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success">Checkout</button>
+                        <button data-toggle="modal" data-target="#myModalCheckOut" type="button" class="btn btn-success"
+                            onclick="checkOut()">GO TO CHECKOUT</button>
                     </div>
                 </div>
             </div>
@@ -86,11 +88,11 @@
         <!-- Cart End -->
 
         <!-- Select box -->
-        <div class="form-group ml-5 pt-5 selectType">
-            <select class="form-control" id="typeSelect" onchange="typePhone()">
-                <option>Chọn loại smart phone</option>
-                <option>Iphone</option>
-                <option>Samsung</option>
+        <div class="form-group ml-5 pt-5 selectedType">
+            <select class="form-control" id="selectedType" onchange="typePhone()">
+                <option value="All">Chọn loại smart phone</option>
+                <option value="Iphone">Iphone</option>
+                <option value="Samsung">Samsung</option>
             </select>
         </div>
         <!-- End Select box -->
@@ -133,6 +135,63 @@
             </div>
         </div>
         <!-- Product End -->
+
+        <!-- Checkout Modal -->
+        <div class="modal fade" id="myModalCheckOut">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover">
+                            <h2 class="text-center">Order Confirmation</h2>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Pricesum</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contentPurchase"></tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex">
+                        <h5 class="ml-3">Total: <span id="paysumPurchase" class="price text-success"></span></h5>
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex justify-content-between">
+                        <button id="closeCheckOut" type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Close</button>
+                        <button data-toggle="modal" data-target="#myModalPurchase" type="button" class="btn btn-success"
+                            onclick="purChase()">Purchase</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Checkout Modal -->
+
+        <!-- Purchase Modal -->
+        <div class="modal fade" id="myModalPurchase">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                        <button id="closeContinueShopping" type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <div class="modal-body text-success">
+                        <h4>Your order has been placed successfully !!!</h4>
+                        <h4 id="orderNum"></h4>
+                        <h4>Thank you so much</h4>
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex justify-content-between">
+                        <button type="button" class="btn btn-success" onclick="confirmOrder()">CONTINUE
+                            SHOPPING</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Purchase Modal -->
     </section>
 
     <!-- Optional JavaScript -->
@@ -151,10 +210,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="./src/services/index.js"></script>
-    <script src="./src/models/lstPhone.js"></script>
-    <script src="./src/models/phone.js"></script>
-    <script src="./src/models/cartiItem.js"></script>
-    <script src="./src/models/cartList.js"></script>
+    <script src="./src/models/./ProductList.js"></script>
+    <script src="./src/models/Product.js"></script>
+    <script src="./src/models/CartList.js"></script>
+    <script src="./src/models/CartItem.js"></script>
     <script src="./src/controllers/main.js"></script>
 </body>
 
