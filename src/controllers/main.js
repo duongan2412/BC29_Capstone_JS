@@ -197,12 +197,24 @@ const renderCartList = () => {
     });
     paysum = '$' + paysum;
     getEle("paysum").innerHTML = paysum;
+    checkCartListEmpty();
     getEle("tbodyInCart").innerHTML = contentHTML;
 }
 
 getEle("showCart").addEventListener("click", () => {
     renderCartList();
 })
+
+// kiểm tra cart list trống 
+const checkCartListEmpty = () => {
+    if (cartList.arrCartList == 0) {
+        getEle("btnCheckOut").disabled = true;
+        getEle("titleCartList").innerHTML = "Looks like you haven't selected your favorites yet";
+    } else {
+        getEle("btnCheckOut").disabled = false;
+        getEle("titleCartList").innerHTML = "Your shopping cart";
+    }
+}
 
 // lấy giá trị tạo obj cartItem
 const getFormValue = (event) => {
