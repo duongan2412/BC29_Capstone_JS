@@ -1,3 +1,5 @@
+// const { log } = require("console");
+
 const services = new Serivces();
 const productList = new ProductList();
 const cartList = new CartList();
@@ -5,40 +7,50 @@ const getEle = (id) => document.getElementById(id);
 
 // lấy thông tin api về
 const getProductLstApi = () => {
-    services
-        .getProductList()
-        .then((result) => {
-            tempProductList(result.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-}
+  services
+    .getProductList()
+    .then((result) => {
+      tempProductList(result.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 const tempProductList = (data) => {
-    data.forEach((ele) => {
-        const id = ele.id;
-        const name = ele.name;
-        const price = ele.price;
-        const screen = ele.screen;
-        const backCamera = ele.backCamera;
-        const frontCamera = ele.frontCamera;
-        const img = ele.img;
-        const desc = ele.desc;
-        const type = ele.type;
-        const phone = new Product(id, name, price, screen, backCamera, frontCamera, img, desc, type);
-        productList.addProduct(phone);
-        renderProducListByApi(productList.arrProductList)
-    })
-}
+  data.forEach((ele) => {
+    const id = ele.id;
+    const name = ele.name;
+    const price = ele.price;
+    const screen = ele.screen;
+    const backCamera = ele.backCamera;
+    const frontCamera = ele.frontCamera;
+    const img = ele.img;
+    const desc = ele.desc;
+    const type = ele.type;
+    const phone = new Product(
+      id,
+      name,
+      price,
+      screen,
+      backCamera,
+      frontCamera,
+      img,
+      desc,
+      type
+    );
+    productList.addProduct(phone);
+    renderProducListByApi(productList.arrProductList);
+  });
+};
 
 getProductLstApi();
 
 // render thông tin api qua html
 const renderProducListByApi = (data) => {
-    let content = "";
-    data.forEach((product) => {
-        content += `
+  let content = "";
+  data.forEach((product) => {
+    content += `
         <div class="col-md-2 mt-1 cart_item">
                     <div class="card text-center">
                         <div class="card-img">
@@ -64,121 +76,128 @@ const renderProducListByApi = (data) => {
                     </div>
                 </div>
         `;
-    })
-    getEle("phone_api_content").innerHTML = content;
-}
+  });
+  getEle("phone_api_content").innerHTML = content;
+};
 
 // hiện thị khi chọn loại phone
 typePhone = () => {
-    const typeSelected = getEle("selectedType").value;
-    const filerPhone = productList.arrProductList.filter((product) => {
-        if (product.type !== typeSelected) {
-            return false;
-        }
-        return true;
-    })
-    if (filerPhone.length == 0) {
-        renderProducListByApi(productList.arrProductList);
-    } else {
-        renderProducListByApi(filerPhone);
+  const typeSelected = getEle("selectedType").value;
+  const filerPhone = productList.arrProductList.filter((product) => {
+    if (product.type !== typeSelected) {
+      return false;
     }
-}
+    return true;
+  });
+  if (filerPhone.length == 0) {
+    renderProducListByApi(productList.arrProductList);
+  } else {
+    renderProducListByApi(filerPhone);
+  }
+};
 
 // hiện thị thông tin product lên modals review
 const getProductApiById = (id) => {
-    services
-        .getProductApi(id)
-        .then((result) => {
-            getEle("phoneNameModals").innerHTML = result.data.name;
-            getEle("phonePriceModals").innerHTML = '$' + result.data.price;
-            getEle("phoneScreenModals").innerHTML = result.data.screen;
-            getEle("phoneBackModals").innerHTML = result.data.backCamera;
-            getEle("phoneFontModals").innerHTML = result.data.frontCamera;
-            getEle("phoneDescModals").innerHTML = result.data.desc;
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-}
+  services
+    .getProductApi(id)
+    .then((result) => {
+      getEle("phoneNameModals").innerHTML = result.data.name;
+      getEle("phonePriceModals").innerHTML = "$" + result.data.price;
+      getEle("phoneScreenModals").innerHTML = result.data.screen;
+      getEle("phoneBackModals").innerHTML = result.data.backCamera;
+      getEle("phoneFontModals").innerHTML = result.data.frontCamera;
+      getEle("phoneDescModals").innerHTML = result.data.desc;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 reviewProduct = (id) => {
-    getProductApiById(id);
-}
+  getProductApiById(id);
+};
 
 const setItemLocalStorage = () => {
-    const stringify = JSON.stringify(cartList.arrCartList);
-    localStorage.setItem("CART_LIST", stringify);
-}
+  const stringify = JSON.stringify(cartList.arrCartList);
+  localStorage.setItem("CART_LIST", stringify);
+};
 
 const getItemLocalStorage = () => {
-    const stringify = localStorage.getItem("CART_LIST");
-    cartList.arrCartList = stringify ? JSON.parse(stringify) : [];
-}
+  const stringify = localStorage.getItem("CART_LIST");
+  cartList.arrCartList = stringify ? JSON.parse(stringify) : [];
+};
 
 getItemLocalStorage();
 
 // add item vao cart list
 addToCart = (event) => {
-    const ele = event.target.parentElement;
-    // ele.querySelector(".btn-card-cart").classList.add("inactive");
-    // ele.querySelector(".qty_content").classList.remove("inactive");
-    const cartItemDom = event.target.closest(".cart_item");
-    const cartItemId = event.target.getAttribute("data-action");
-    const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
-    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
-    const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
-    let cartItemQty = 1;
-    const cartItem = new CartItem(cartItemId, cartItemName, cartItemPrice, cartItemImg, cartItemQty);
-    cartList.addCart(cartItem);
-    renderCartNum();
-    setItemLocalStorage();
-}
+  const ele = event.target.parentElement;
+  // ele.querySelector(".btn-card-cart").classList.add("inactive");
+  // ele.querySelector(".qty_content").classList.remove("inactive");
+  const cartItemDom = event.target.closest(".cart_item");
+  const cartItemId = event.target.getAttribute("data-action");
+  const cartItemImg = cartItemDom
+    .querySelector(".phoneImg")
+    .getAttribute("alt");
+  const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+  const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
+  let cartItemQty = 1;
+  const cartItem = new CartItem(
+    cartItemId,
+    cartItemName,
+    cartItemPrice,
+    cartItemImg,
+    cartItemQty
+  );
+  cartList.addCart(cartItem);
+  renderCartNum();
+  setItemLocalStorage();
+};
 
 // xử lý trùng id trong storage
 const mergeDuplicate = (arr) => {
-    let newArr = []
-    arr.forEach(ele => {
-        let el = newArr.find(newEle => newEle.name == ele.name);
-        if (el) {
-            el.qty += ele.qty
-        }
-        else {
-            newArr.push(ele)
-        }
-    });
-    return newArr;
-}
-
-// render số lượng đc chọn 
-const renderCartNum = () => {
-    setItemLocalStorage();
-    cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
-    let total = 0;
-    for (let i = 0; i < cartList.arrCartList.length; i++) {
-        total += cartList.arrCartList[i].qty;
-    }
-    if (total > 0) {
-        getEle("cartTotalQty").classList.remove("inactive");
-        getEle("cartTotalQty").innerHTML = total
+  let newArr = [];
+  arr.forEach((ele) => {
+    let el = newArr.find((newEle) => newEle.name == ele.name);
+    if (el) {
+      el.qty += ele.qty;
     } else {
-        getEle("cartTotalQty").classList.add("inactive");
+      newArr.push(ele);
     }
-}
+  });
+  return newArr;
+};
+
+// render số lượng đc chọn
+const renderCartNum = () => {
+  setItemLocalStorage();
+  cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
+  let total = 0;
+  for (let i = 0; i < cartList.arrCartList.length; i++) {
+    total += cartList.arrCartList[i].qty;
+  }
+  if (total > 0) {
+    getEle("cartTotalQty").classList.remove("inactive");
+    getEle("cartTotalQty").innerHTML = total;
+  } else {
+    getEle("cartTotalQty").classList.add("inactive");
+  }
+};
 
 renderCartNum();
 
 // render lên cart list
 const renderCartList = () => {
-    setItemLocalStorage();
-    cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
-    let contentHTML = "";
-    let paysum = 0;
-    cartList.arrCartList.forEach((product) => {
-        const price = parseInt(product.price);
-        const qty = parseInt(product.qty);
-        const pricesum = price * qty;
-        paysum += pricesum;
-        contentHTML += `
+  setItemLocalStorage();
+  cartList.arrCartList = mergeDuplicate(cartList.arrCartList);
+  let contentHTML = "";
+  let paysum = 0;
+  cartList.arrCartList.forEach((product) => {
+    const price = parseInt(product.price);
+    const qty = parseInt(product.qty);
+    const pricesum = price * qty;
+    paysum += pricesum;
+    contentHTML += `
                 <tr>
                     <td class="w-25">
                         <img src="./../../assets/img/${product.img}" class="img-fluid img-thumbnail phoneImg" alt="${product.img}">
@@ -193,94 +212,103 @@ const renderCartList = () => {
                         </a>
                     </td>
                 </tr>
-            `
-    });
-    paysum = '$' + paysum;
-    getEle("paysum").innerHTML = paysum;
-    checkCartListEmpty();
-    getEle("tbodyInCart").innerHTML = contentHTML;
-}
+            `;
+  });
+  paysum = "$" + paysum;
+  getEle("paysum").innerHTML = paysum;
+  checkCartListEmpty();
+  getEle("tbodyInCart").innerHTML = contentHTML;
+};
 
 getEle("showCart").addEventListener("click", () => {
-    renderCartList();
-})
+  renderCartList();
+});
 
-// kiểm tra cart list trống 
+// kiểm tra cart list trống
 const checkCartListEmpty = () => {
-    if (cartList.arrCartList == 0) {
-        getEle("btnCheckOut").disabled = true;
-        getEle("titleCartList").innerHTML = "Looks like you haven't selected your favorites yet";
-    } else {
-        getEle("btnCheckOut").disabled = false;
-        getEle("titleCartList").innerHTML = "Your shopping cart";
-    }
-}
+  if (cartList.arrCartList == 0) {
+    getEle("btnCheckOut").disabled = true;
+    getEle("titleCartList").innerHTML =
+      "Looks like you haven't selected your favorites yet";
+  } else {
+    getEle("btnCheckOut").disabled = false;
+    getEle("titleCartList").innerHTML = "Your shopping cart";
+  }
+};
 
 // lấy giá trị tạo obj cartItem
 const getFormValue = (event) => {
-    const cartItemDom = event.target.closest("tr");
-    const cartItemId = event.target.getAttribute("data-action");
-    const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
-    const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
-    const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
-    const cartItemQty = cartItemDom.querySelector(".phoneQty").value * 1;
-    return item = new CartItem(cartItemId, cartItemName, cartItemPrice, cartItemImg, cartItemQty);
-}
+  const cartItemDom = event.target.closest("tr");
+  const cartItemId = event.target.getAttribute("data-action");
+  const cartItemImg = cartItemDom
+    .querySelector(".phoneImg")
+    .getAttribute("alt");
+  const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
+  const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
+  const cartItemQty = cartItemDom.querySelector(".phoneQty").value * 1;
+  return (item = new CartItem(
+    cartItemId,
+    cartItemName,
+    cartItemPrice,
+    cartItemImg,
+    cartItemQty
+  ));
+};
 
-// Xoá item trong cart list 
+// Xoá item trong cart list
 removeItem = (id) => {
-    cartList.deleteItem(id);
-    if (cartList.arrCartList.length == 0) {
-        getEle("closeCartList").click();
-        getEle("cartTotalQty").classList.add("inactive");
-    }
-    renderCartList();
-    renderCartNum();
-}
+  cartList.deleteItem(id);
+  if (cartList.arrCartList.length == 0) {
+    getEle("closeCartList").click();
+    getEle("cartTotalQty").classList.add("inactive");
+  }
+  renderCartList();
+  renderCartNum();
+};
 
 // xử lý thay đổi số lượng trong cart list
 checkQty = (event) => {
-    const cartItem = getFormValue(event);
-    cartList.updateItem(cartItem);
-    renderCartList();
-    renderCartNum();
-}
+  const cartItem = getFormValue(event);
+  cartList.updateItem(cartItem);
+  renderCartList();
+  renderCartNum();
+};
 
-// check out cart list 
+// check out cart list
 checkOut = () => {
-    getEle("closeCartList").click();
-    let contentHTML = '';
-    let paysum = 0;
-    cartList.arrCartList.forEach(ele => {
-        const price = parseInt(ele.price);
-        const qty = parseInt(ele.qty);
-        const pricesum = price * qty;
-        paysum += pricesum;
-        contentHTML += `
+  getEle("closeCartList").click();
+  let contentHTML = "";
+  let paysum = 0;
+  cartList.arrCartList.forEach((ele) => {
+    const price = parseInt(ele.price);
+    const qty = parseInt(ele.qty);
+    const pricesum = price * qty;
+    paysum += pricesum;
+    contentHTML += `
         <tr class="text-success">
             <td>${ele.name}</td>
             <td>${ele.qty}</td>
             <td>$${pricesum}</td>
         </tr>
-        `
-    });
-    paysum = '$' + paysum;
-    getEle("paysumPurchase").innerHTML = paysum;
-    getEle("contentPurchase").innerHTML = contentHTML;
-}
+        `;
+  });
+  paysum = "$" + paysum;
+  getEle("paysumPurchase").innerHTML = paysum;
+  getEle("contentPurchase").innerHTML = contentHTML;
+};
 
-// purchase cart list 
+// purchase cart list
 purChase = () => {
-    getEle("closeCheckOut").click();
-    let orderNum = Math.floor(Math.random() * 1001);
-    const orderNumContent = "Your order number: #" + orderNum;
-    getEle("orderNum").innerHTML = orderNumContent;
-}
+  getEle("closeCheckOut").click();
+  let orderNum = Math.floor(Math.random() * 1001);
+  const orderNumContent = "Your order number: #" + orderNum;
+  getEle("orderNum").innerHTML = orderNumContent;
+};
 
 confirmOrder = () => {
-    cartList.arrCartList = [];
-    localStorage.removeItem("CART_LIST");
-    getEle("closeContinueShopping").click();
-    getEle("cartTotalQty").classList.add("inactive");
-}
+  cartList.arrCartList = [];
+  localStorage.removeItem("CART_LIST");
+  getEle("closeContinueShopping").click();
+  getEle("cartTotalQty").classList.add("inactive");
+};
 
