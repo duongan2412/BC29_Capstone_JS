@@ -39,7 +39,7 @@ const renderProducListByApi = (data) => {
     let content = "";
     data.forEach((product) => {
         content += `
-        <div class="col-md-2 cart_item">
+        <div class="col-md-2 mt-1 cart_item">
                     <div class="card text-center">
                         <div class="card-img">
                             <img src="./../../assets/img/${product.img}" class="img-fluid phoneImg" alt="${product.img}">
