@@ -207,7 +207,7 @@ const renderCartList = () => {
                     <td class="qty"><input class="phoneQty" type="number" class="form-control" min=0 value="${qty}" onchange="checkQty(event)" data-action="${product.id}"></td>
                     <td>$${pricesum}</td>
                     <td>
-                        <a href="#" class="btn btn-danger btn-sm" onclick="removeItem('${product.id}')">
+                        <a href="#" id="btnCloseCartListITem" class="btn btn-danger btn-sm" onclick="removeItem('${product.id}')">
                             <i class="fa fa-times"></i>
                         </a>
                     </td>
@@ -240,9 +240,7 @@ const checkCartListEmpty = () => {
 const getFormValue = (event) => {
   const cartItemDom = event.target.closest("tr");
   const cartItemId = event.target.getAttribute("data-action");
-  const cartItemImg = cartItemDom
-    .querySelector(".phoneImg")
-    .getAttribute("alt");
+  const cartItemImg = cartItemDom.querySelector(".phoneImg").getAttribute("alt");
   const cartItemName = cartItemDom.querySelector(".phoneName").innerHTML;
   const cartItemPrice = cartItemDom.querySelector(".phonePrice").innerHTML;
   const cartItemQty = cartItemDom.querySelector(".phoneQty").value * 1;
@@ -268,10 +266,16 @@ removeItem = (id) => {
 
 // xử lý thay đổi số lượng trong cart list
 checkQty = (event) => {
-  const cartItem = getFormValue(event);
-  cartList.updateItem(cartItem);
-  renderCartList();
-  renderCartNum();
+  const cartItemDom = event.target.closest("tr");
+  const cartItemQty = cartItemDom.querySelector(".phoneQty").value * 1;
+  if (cartItemQty == 0) {
+    getEle("btnCloseCartListITem").click();
+  } else {
+    const cartItem = getFormValue(event);
+    cartList.updateItem(cartItem);
+    renderCartList();
+    renderCartNum();
+  }
 };
 
 // check out cart list
