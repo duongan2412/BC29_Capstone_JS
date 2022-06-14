@@ -7,13 +7,16 @@ const getEle = (id) => document.getElementById(id);
 
 // lấy thông tin api về
 const getProductLstApi = () => {
+  getEle("loader").style.display = "block";
   services
     .getProductList()
     .then((result) => {
       tempProductList(result.data);
+      getEle("loader").style.display = "none"
     })
     .catch((error) => {
       console.log(error);
+      getEle("loader").style.display = "none"
     });
 };
 
